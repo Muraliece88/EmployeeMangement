@@ -1,0 +1,18 @@
+FROM maven:3.8.5-openjdk-17 AS build
+
+WORKDIR /app
+
+COPY pom.xml ./
+COPY crud-service/pom.xml crud-service/
+COPY crud-service/src crud-service/src
+COPY crud-service/src/main/resources crud-service/src/main/resources
+
+RUN mvn -f crud-service/pom.xml clean package
+
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+
+COPY --from=build /app/crud-service/target/crud-service-*.jar crud.jar
+EXPOSE 9091
+
+CMD ["java","-jar","crud.jar"]

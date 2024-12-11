@@ -1,0 +1,244 @@
+openapi: 3.0.0
+info:
+  title: Employee Operations API
+  version: 1.0.0
+
+
+security:
+  - basicAuth: []
+
+paths:
+  /api/employees:
+    post:
+      summary: Create Employee
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeRequestDto'
+      responses:
+        '200':
+          $ref: '#/components/schemas/EmployeeResponseDto'
+
+        '400':
+          description: When there is a validation error with the input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+              example: Name should not be blank
+        '401':
+          description: When there is a issue with authentication with user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+        '403':
+          description: When use doesnt belong to appropriate role
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+
+        '500':
+          description: Some technical issue within the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+
+  /api/employees/{id}:
+    get:
+      summary: Get Employee by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          $ref: '#/components/schemas/EmployeeResponseDto'
+
+
+        '400':
+          description: If the id is not sent in the request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+        '404':
+          description: If the requested employee is not found
+
+
+        '401':
+          description: When there is a issue with authentication with user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+        '403':
+          description: When use doesnt belong to appropriate role
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+
+        '500':
+          description: Some technical issue within the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+    put:
+      summary: Update Employee
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeRequestDto'
+      responses:
+        '200':
+          $ref: '#/components/schemas/EmployeeResponseDto'
+
+
+        '400':
+          description: IF the id of the employee is missing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+        '401':
+          description: When there is a issue with authentication with user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+        '403':
+          description: When use doesnt belong to appropriate role
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+
+        '500':
+          description: Some technical issue within the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+    delete:
+      summary: Delete an employee
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: Role
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Role of the user
+      responses:
+        '200':
+          description: Employee deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+        '400':
+          description: IF the id of the employee is missing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+        '401':
+          description: When there is a issue with authentication with user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+        '403':
+          description: When use doesnt belong to appropriate role
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+
+        '500':
+          description: Some technical issue within the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+
+    Errors:
+      type: object
+      properties:
+        status:
+          type: integer
+        messsage:
+          type: string
+        timestamp:
+          type: string
+
+
+    EmployeeRequestDto:
+      type: object
+      properties:
+        name:
+          type: string
+        role_id:
+          type: integer
+      required:
+        - name
+        - role_id
+
+
+
+    EmployeeResponseDto:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        role_id:
+          type: integer
+
+
+
+

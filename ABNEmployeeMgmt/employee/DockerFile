@@ -1,0 +1,18 @@
+FROM maven:3.8.5-openjdk-17 AS build
+
+WORKDIR /app
+
+COPY pom.xml ./
+COPY employee/pom.xml employee/
+COPY employee/src employee/src
+COPY employee/src/main/resources employee/src/main/resources
+
+RUN mvn -f employee/pom.xml clean package
+
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+
+COPY --from=build /app/employee/target/employee-*.jar employee.jar
+EXPOSE 9090
+
+CMD ["java","-jar","employee.jar"]

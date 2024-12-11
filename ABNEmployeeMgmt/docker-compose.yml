@@ -1,0 +1,33 @@
+services:
+
+  crud-service:
+    image: crud
+    build:
+      context: .
+      dockerfile: crud-service/DockerFile
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+    ports:
+      - "9091:9091"
+    networks:
+      - app-network
+
+  employee:
+    image: employee
+    build:
+      context: .
+      dockerfile: employee/DockerFile
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+    depends_on:
+      - crud-service
+    ports:
+      - "9090:9090"
+    networks:
+      - app-network
+
+
+
+networks:
+  app-network:
+    driver: bridge

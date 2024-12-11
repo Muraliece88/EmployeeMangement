@@ -1,0 +1,261 @@
+openapi: 3.0.0
+info:
+  title: Employee Management API
+  version: 1.0.0
+
+security:
+  - basicAuth: []
+paths:
+  /employees:
+    post:
+      summary: Create a new employee
+      parameters:
+        - name: Role
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Role of the user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeRequestDto'
+      responses:
+        '200':
+          description: Employee created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeResponseDto'
+        '400':
+          description: When there is a validation error with the input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+              example: Invalid role Guest
+        '401':
+          description: When there is a issue with authentication with user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+        '403':
+          description: When use doesnt belong to appropriate role
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+
+        '500':
+          description: Some technical issue within the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+  /employees/{id}:
+    get:
+      summary: Get an employee details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: Role
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Role of the user (e.g., User)
+      responses:
+        '201':
+          description: Employee details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeResponseDto'
+
+        '400':
+          description: When there is a validation error with the input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '401':
+          description: When there is a issue with authentication with user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+        '403':
+          description: When use doesnt belong to appropriate role
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+
+        '500':
+          description: Some technical issue within the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+    put:
+      summary: Update an employee
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: Role
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Role of the user e.g., USER
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeRequestDto'
+      responses:
+        '200':
+          description: Employee updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeResponseDto'
+
+        '400':
+          description: When there is a validation error with the input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '401':
+          description: When there is a issue with authentication with user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+        '403':
+          description: When use doesnt belong to appropriate role
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+
+        '500':
+          description: Some technical issue within the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+
+    delete:
+      summary: Delete an employee
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: Role
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Role of the user
+      responses:
+        '200':
+          description: Employee deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+        '400':
+          description: When there is a validation error with the input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '401':
+          description: When there is a issue with authentication with user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+        '403':
+          description: When use doesnt belong to appropriate role
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+
+        '500':
+          description: Some technical issue within the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    EmployeeRequestDto:
+      type: object
+      properties:
+        first_name:
+          type: string
+        surname:
+          type: string
+      required:
+        - first_name
+        - surname
+
+    EmployeeResponseDto:
+      type: object
+      properties:
+        id:
+          type: integer
+        first_name:
+          type: string
+        surname:
+          type: string
+        role_id:
+          type: integer
+
+
+    Errors:
+      type: object
+      properties:
+        status:
+          type: integer
+        messsage:
+          type: string
+        timestamp:
+          type: string
